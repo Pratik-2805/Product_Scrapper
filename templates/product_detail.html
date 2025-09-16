@@ -1,0 +1,730 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <title>{{ product.product_name }} - Product Details</title>
+
+  <!-- Bootstrap core CSS -->
+  <link href="{% static 'vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+
+  <style>
+    :root {
+      --primary-color: #ff6b35;
+      --secondary-color: #2c3e50;
+      --accent-color: #3498db;
+      --success-color: #27ae60;
+      --warning-color: #f39c12;
+      --light-gray: #f8f9fa;
+      --dark-gray: #6c757d;
+      --border-color: #e9ecef;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f8f9fa;
+    }
+
+    .navbar {
+      background: linear-gradient(135deg, var(--primary-color), #e55a2b) !important;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+
+    .navbar-brand {
+      font-weight: bold;
+      font-size: 24px;
+      color: white !important;
+    }
+
+    .nav-link {
+      color: white !important;
+      font-weight: 500;
+      transition: color 0.3s;
+    }
+
+    .nav-link:hover {
+      color: #f8f9fa !important;
+    }
+
+    .product-detail-container {
+      background: white;
+      border-radius: 15px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+      margin: 30px 0;
+      overflow: hidden;
+    }
+
+    .product-header {
+      background: linear-gradient(135deg, var(--primary-color), #e55a2b);
+      color: white;
+      padding: 30px;
+      text-align: center;
+    }
+
+    .product-header h1 {
+      margin: 0;
+      font-size: 2.5rem;
+      font-weight: bold;
+    }
+
+    .product-header .breadcrumb {
+      background: transparent;
+      color: rgba(255,255,255,0.8);
+      margin: 10px 0 0 0;
+    }
+
+    .product-header .breadcrumb a {
+      color: white;
+      text-decoration: none;
+    }
+
+    .product-content {
+      padding: 40px;
+    }
+
+    .product-image-section {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    .main-product-image {
+      max-width: 100%;
+      max-height: 500px;
+      border-radius: 15px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+      transition: transform 0.3s;
+    }
+
+    .main-product-image:hover {
+      transform: scale(1.05);
+    }
+
+    .image-placeholder {
+      width: 400px;
+      height: 400px;
+      background: var(--light-gray);
+      border-radius: 15px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto;
+      color: var(--dark-gray);
+    }
+
+    .image-placeholder i {
+      font-size: 5rem;
+      opacity: 0.5;
+    }
+
+    .product-info-section {
+      background: var(--light-gray);
+      padding: 30px;
+      border-radius: 15px;
+      margin-bottom: 30px;
+    }
+
+    .product-title {
+      color: var(--secondary-color);
+      font-size: 2.2rem;
+      font-weight: bold;
+      margin-bottom: 20px;
+      line-height: 1.3;
+    }
+
+    .price-section {
+      background: white;
+      padding: 25px;
+      border-radius: 10px;
+      margin: 25px 0;
+      border-left: 5px solid var(--primary-color);
+    }
+
+    .current-price {
+      font-size: 3rem;
+      font-weight: bold;
+      color: var(--primary-color);
+      margin-bottom: 10px;
+    }
+
+    .original-price {
+      font-size: 1.8rem;
+      color: var(--dark-gray);
+      text-decoration: line-through;
+      margin-right: 20px;
+    }
+
+    .discount-badge {
+      background: var(--success-color);
+      color: white;
+      padding: 8px 15px;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: bold;
+    }
+
+    .rating-section {
+      display: flex;
+      align-items: center;
+      margin: 25px 0;
+      padding: 20px;
+      background: white;
+      border-radius: 10px;
+    }
+
+    .rating-stars {
+      color: var(--warning-color);
+      font-size: 28px;
+      margin-right: 15px;
+    }
+
+    .rating-text {
+      color: var(--dark-gray);
+      font-size: 18px;
+      margin-right: 20px;
+    }
+
+    .reviews-count {
+      background: var(--accent-color);
+      color: white;
+      padding: 5px 12px;
+      border-radius: 20px;
+      font-size: 14px;
+    }
+
+    .details-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 30px;
+      margin: 30px 0;
+    }
+
+    .detail-card {
+      background: white;
+      padding: 25px;
+      border-radius: 10px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+    }
+
+    .detail-card h4 {
+      color: var(--secondary-color);
+      margin-bottom: 20px;
+      font-size: 1.3rem;
+      border-bottom: 2px solid var(--primary-color);
+      padding-bottom: 10px;
+    }
+
+    .detail-item {
+      display: flex;
+      justify-content: space-between;
+      padding: 12px 0;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .detail-item:last-child {
+      border-bottom: none;
+    }
+
+    .detail-label {
+      font-weight: 600;
+      color: var(--secondary-color);
+    }
+
+    .detail-value {
+      color: var(--dark-gray);
+      text-align: right;
+      max-width: 60%;
+    }
+
+    .description-section {
+      background: white;
+      padding: 30px;
+      border-radius: 10px;
+      margin: 30px 0;
+    }
+
+    .description-section h4 {
+      color: var(--secondary-color);
+      margin-bottom: 20px;
+      font-size: 1.5rem;
+    }
+
+    .description-text {
+      color: var(--dark-gray);
+      line-height: 1.6;
+      font-size: 16px;
+    }
+
+    .action-buttons {
+      text-align: center;
+      margin: 40px 0;
+    }
+
+    .btn-primary {
+      background: linear-gradient(45deg, var(--primary-color), #e55a2b);
+      border: none;
+      border-radius: 25px;
+      padding: 15px 40px;
+      font-weight: 600;
+      font-size: 18px;
+      transition: all 0.3s;
+      margin: 0 15px;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(255, 107, 53, 0.4);
+    }
+
+    .btn-secondary {
+      background: var(--light-gray);
+      border: 2px solid var(--border-color);
+      border-radius: 25px;
+      padding: 15px 40px;
+      font-weight: 600;
+      color: var(--dark-gray);
+      transition: all 0.3s;
+      margin: 0 15px;
+    }
+
+    .btn-secondary:hover {
+      background: var(--border-color);
+      color: var(--secondary-color);
+    }
+
+    .specifications-section {
+      background: white;
+      padding: 30px;
+      border-radius: 10px;
+      margin: 30px 0;
+    }
+
+    .specifications-section h4 {
+      color: var(--secondary-color);
+      margin-bottom: 25px;
+      font-size: 1.5rem;
+    }
+
+    .spec-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .spec-table th,
+    .spec-table td {
+      padding: 12px 15px;
+      text-align: left;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .spec-table th {
+      background: var(--light-gray);
+      font-weight: 600;
+      color: var(--secondary-color);
+    }
+
+    .spec-table td {
+      color: var(--dark-gray);
+    }
+
+    .scraped-info {
+      background: #e8f5e8;
+      border: 1px solid #c3e6c3;
+      border-radius: 10px;
+      padding: 20px;
+      margin: 30px 0;
+    }
+
+    .scraped-info h5 {
+      color: var(--success-color);
+      margin-bottom: 15px;
+    }
+
+    .scraped-info p {
+      color: #155724;
+      margin: 5px 0;
+    }
+
+    @media (max-width: 768px) {
+      .details-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+      }
+      
+      .current-price {
+        font-size: 2.5rem;
+      }
+      
+      .product-title {
+        font-size: 1.8rem;
+      }
+      
+      .action-buttons .btn {
+        display: block;
+        margin: 10px auto;
+        width: 80%;
+      }
+    }
+  </style>
+
+</head>
+
+<body>
+  <!-- Navigation -->
+  <nav class="navbar navbar-expand-lg navbar-dark static-top">
+    <div class="container">
+      <a class="navbar-brand" href="{% url 'index' %}">
+        <i class="fas fa-search-dollar"></i> Product Scraper
+      </a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarResponsive">
+        <ul class="navbar-nav ml-auto">
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'index' %}">
+              <i class="fas fa-home"></i> Home
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'images' %}">
+              <i class="fas fa-shopping-bag"></i> My Products
+            </a>
+          </li>
+          {% if user.is_authenticated %}
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'logout' %}">
+              <i class="fas fa-sign-out-alt"></i> Logout
+            </a>
+          </li>
+          {% else %}
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'login' %}">
+              <i class="fas fa-sign-in-alt"></i> Login
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'register' %}">
+              <i class="fas fa-user-plus"></i> Signup
+            </a>
+          </li>
+          {% endif %}
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Product Detail Container -->
+  <div class="container">
+    <div class="row">
+      <div class="col-12">
+        <div class="product-detail-container">
+          <!-- Product Header -->
+          <div class="product-header">
+            <nav aria-label="breadcrumb">
+              <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="/">Home</a></li>
+                <li class="breadcrumb-item"><a href="{% url 'images' %}">My Products</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Product Details</li>
+              </ol>
+            </nav>
+            <h1><i class="fas fa-info-circle"></i> Product Details</h1>
+          </div>
+
+          <!-- Product Content -->
+          <div class="product-content">
+            <!-- Product Image Section -->
+            <div class="product-image-section">
+              {% if product.image_url %}
+                <img src="{{ product.image_url }}" class="main-product-image" alt="{{ product.product_name }}"
+                     onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                <div class="image-placeholder" style="display: none;">
+                  <i class="fas fa-image"></i>
+                </div>
+              {% else %}
+                <div class="image-placeholder">
+                  <i class="fas fa-image"></i>
+                </div>
+              {% endif %}
+            </div>
+
+            <!-- Product Information -->
+            <div class="product-info-section">
+              <h2 class="product-title">{{ product.product_name }}</h2>
+              
+              <!-- Price Section -->
+              <div class="price-section">
+                {% if product.price %}
+                <div class="current-price">₹{{ product.price }}</div>
+                {% endif %}
+                {% if product.original_price %}
+                <div>
+                  <span class="original-price">₹{{ product.original_price }}</span>
+                  {% if product.discount %}
+                  <span class="discount-badge">{{ product.discount }} OFF</span>
+                  {% endif %}
+                </div>
+                {% endif %}
+              </div>
+              
+              <!-- Rating Section -->
+              {% if product.rating %}
+              <div class="rating-section">
+                <span class="rating-stars">
+                  {% for i in "12345" %}
+                    {% if forloop.counter <= product.rating|add:0 %}
+                      ★
+                    {% else %}
+                      ☆
+                    {% endif %}
+                  {% endfor %}
+                </span>
+                <span class="rating-text">{{ product.rating }}/5</span>
+                {% if product.reviews %}
+                  <span class="reviews-count">{{ product.reviews }} reviews</span>
+                {% endif %}
+              </div>
+              {% endif %}
+            </div>
+
+            <!-- Details Grid -->
+            <div class="details-grid">
+              <!-- Basic Information (expanded) -->
+              <div class="detail-card" style="grid-column: 1 / -1;">
+                <h4><i class="fas fa-info-circle"></i> Basic Information</h4>
+                {% if product.brand %}
+                <div class="detail-item">
+                  <span class="detail-label">Brand:</span>
+                  <span class="detail-value">{{ product.brand }}</span>
+                </div>
+                {% endif %}
+                {% if product.category %}
+                <div class="detail-item">
+                  <span class="detail-label">Category:</span>
+                  <span class="detail-value">{{ product.category }}</span>
+                </div>
+                {% endif %}
+                {% if product.seller %}
+                <div class="detail-item">
+                  <span class="detail-label">Seller:</span>
+                  <span class="detail-value">{{ product.seller }}</span>
+                </div>
+                {% endif %}
+                {% if product.availability %}
+                <div class="detail-item">
+                  <span class="detail-label">Availability:</span>
+                  <span class="detail-value">{{ product.availability }}</span>
+                </div>
+                {% endif %}
+                {% if product.rating %}
+                <div class="detail-item">
+                  <span class="detail-label">Rating:</span>
+                  <span class="detail-value">
+                    <span class="rating-stars">
+                      {% for i in "12345" %}
+                        {% if forloop.counter <= product.rating|add:0 %}
+                          ★
+                        {% else %}
+                          ☆
+                        {% endif %}
+                      {% endfor %}
+                    </span>
+                    {{ product.rating }}/5
+                  </span>
+                </div>
+                {% endif %}
+                {% if product.reviews %}
+                <div class="detail-item">
+                  <span class="detail-label">Reviews:</span>
+                  <span class="detail-value">{{ product.reviews }}</span>
+                </div>
+                {% endif %}
+                <div class="detail-item">
+                  <span class="detail-label">Source URL:</span>
+                  <span class="detail-value">
+                    <a href="{{ product.product_url }}" target="_blank" class="text-primary">
+                      <i class="fas fa-external-link-alt"></i> View Original
+                    </a>
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Description Section -->
+            {% if product.description %}
+            <div class="description-section">
+              <h4><i class="fas fa-align-left"></i> Product Description</h4>
+              <div class="description-text">{{ product.description }}</div>
+            </div>
+            {% endif %}
+
+            <!-- Specifications Section -->
+            {% if product.specifications %}
+            <div class="specifications-section">
+              <h4><i class="fas fa-list-alt"></i> Specifications</h4>
+              <table class="spec-table">
+                {% for key, value in product.specifications.items %}
+                <tr>
+                  <th>{{ key }}</th>
+                  <td>{{ value }}</td>
+                </tr>
+                {% endfor %}
+              </table>
+            </div>
+            {% endif %}
+
+            <!-- Price History Section -->
+            <div class="specifications-section">
+              <h4><i class="fas fa-chart-line"></i> Price History</h4>
+              <p class="text-muted mb-3">
+                <i class="fas fa-info-circle"></i> 
+                Price tracking updates each time you scrape this product. 
+                Last updated: {{ product.scraped_at|date:"M d, Y H:i" }}
+              </p>
+              <canvas id="priceHistoryChart" width="400" height="200"></canvas>
+            </div>
+
+            {% if comparison_results %}
+            <div class="specifications-section">
+              <h4><i class="fas fa-balance-scale"></i> Price Comparison</h4>
+              <div class="table-responsive">
+                <table class="table">
+                  <thead>
+                    <tr>
+                      <th>Store</th>
+                      <th>Title</th>
+                      <th>Price</th>
+                      <th>Link</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {% for item in comparison_results %}
+                    <tr>
+                      <td>{{ item.store }}</td>
+                      <td>{{ item.title }}</td>
+                      <td>{{ item.price }}</td>
+                      <td><a href="{{ item.link }}" target="_blank">Open</a></td>
+                    </tr>
+                    {% endfor %}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            {% endif %}
+
+            <!-- Scraped Information -->
+            <div class="scraped-info">
+              <h5><i class="fas fa-robot"></i> Scraped Information</h5>
+              <p><strong>Product ID:</strong> {{ product.id }}</p>
+              <p><strong>Database Entry:</strong> {{ product.scraped_at|date:"F d, Y \\a\\t H:i" }}</p>
+              <p><strong>Last Updated:</strong> {{ product.scraped_at|timesince }} ago</p>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="action-buttons">
+              <a href="{{ product.product_url }}" target="_blank" class="btn btn-primary">
+                <i class="fas fa-external-link-alt"></i> View Original Product
+              </a>
+              <a href="{% url 'images' %}" class="btn btn-secondary">
+                <i class="fas fa-arrow-left"></i> Back to My Products
+              </a>
+              <a href="/" class="btn btn-secondary">
+                <i class="fas fa-plus"></i> Scrape Another Product
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bootstrap core JavaScript -->
+  <script src="{% static 'vendor/jquery/jquery.slim.min.js' %}"></script>
+  <script src="{% static 'vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+
+  <script>
+    // Image loading fallback
+    document.addEventListener('DOMContentLoaded', function() {
+      const images = document.querySelectorAll('.main-product-image');
+      images.forEach(img => {
+        img.addEventListener('error', function() {
+          this.style.display = 'none';
+          const placeholder = this.nextElementSibling;
+          if (placeholder) {
+            placeholder.style.display = 'flex';
+          }
+        });
+      });
+    });
+    // Render price history chart
+    document.addEventListener('DOMContentLoaded', function() {
+      const ctx = document.getElementById('priceHistoryChart');
+      if (!ctx) return;
+      let labels = [];
+      let data = [];
+      try {
+        labels = JSON.parse('{{ price_history_labels|default:"[]"|escapejs }}');
+        data = JSON.parse('{{ price_history_data|default:"[]"|escapejs }}');
+      } catch (e) {
+        console.log('Error parsing price data:', e);
+      }
+      
+      // Always show chart - use current price if no history
+      if (!labels || labels.length === 0 || !data || data.length === 0) {
+        const today = new Date();
+        const label = today.toLocaleDateString(undefined, { day: '2-digit', month: 'short', year: 'numeric' });
+        const current = Number('{{ product.price|default:"" }}') || 0;
+        labels = [label];
+        data = [current];
+      }
+      new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: labels,
+          datasets: [{
+            label: 'Price (₹)',
+            data: data,
+            borderColor: '#ff6b35',
+            backgroundColor: 'rgba(255,107,53,0.15)',
+            tension: 0.25,
+            pointRadius: 2,
+            fill: true
+          }]
+        },
+        options: {
+          responsive: true,
+          plugins: {
+            legend: { display: true },
+            tooltip: { mode: 'index', intersect: false }
+          },
+          scales: {
+            x: { 
+              display: true, 
+              title: { display: true, text: 'Date' },
+              ticks: { maxTicksLimit: 8 }
+            },
+            y: { 
+              display: true, 
+              title: { display: true, text: 'Price (₹)' }, 
+              beginAtZero: false 
+            }
+          }
+        }
+      });
+    });
+  </script>
+
+</body>
+
+</html>
+

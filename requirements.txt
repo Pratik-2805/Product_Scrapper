@@ -1,0 +1,10 @@
+beautifulsoup4
+bs4
+Django
+gunicorn
+psycopg2-binary
+requests
+urllib3
+uvicorn
+whitenoise
+scrapingbee

@@ -1,0 +1,15 @@
+services:
+  - type: web
+    name: Product_Scrapper
+    env: python
+    plan: free
+    startCommand: "gunicorn --chdir Product_Scrapper Product_Scrapper.wsgi:application"
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.0
+      - key: DJANGO_SETTINGS_MODULE
+        value: backend.settings
+      - key: SECRET_KEY
+        generateValue: true
+      - key: WEB_CONCURRENCY
+        value: 4
