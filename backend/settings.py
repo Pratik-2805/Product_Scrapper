@@ -24,10 +24,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-ymtb2i(@pgld+vw9+9@7b!q&re$ysqi*9wiu-2fr6=6ui0zv_8'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = 'RENDER' not in os.environ
 
 ALLOWED_HOSTS = ['*']
-
 
 # Application definition
 
@@ -50,6 +49,10 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
+# Add whitenoise middleware only in production
+if 'RENDER' in os.environ:
+    MIDDLEWARE.insert(1, 'whitenoise.middleware.WhiteNoiseMiddleware')
 
 ROOT_URLCONF = 'backend.urls'
 
@@ -122,6 +125,10 @@ STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'),)
 
+# Enable WhiteNoise for static files only in production
+if 'RENDER' in os.environ:
+    STATICFILES_STORAGE = 'whitenoise.storage.WhiteNoiseStaticFilesStorage'
+
 
 
 # Default primary key field type
@@ -130,4 +137,4 @@ STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'),)
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # ScrapingBee API Key
-SCRAPINGBEE_API_KEY = '2RI141XWE2B80JBL1LOYCT5RI0F059L4TAYIJ1NFMZLTGMBMOACVAECNW0CGAV4K8F0UBSRGP1800OCX'
+SCRAPINGBEE_API_KEY = 'YOUR-API-KEY'
