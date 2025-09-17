@@ -11,389 +11,74 @@
 
   <title>Product Scraper - Price Comparison Tool</title>
 
-  <!-- Bootstrap core CSS -->
-  <link href="{% static 'vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: '#ff6b35',
+            primary2: '#e55a2b',
+            secondary: '#2c3e50',
+            accent: '#3498db',
+            successc: '#27ae60',
+            warningc: '#f39c12',
+            light: '#f8f9fa',
+            dark: '#6c757d',
+            borderc: '#e9ecef'
+          },
+          boxShadow: {
+            card: '0 10px 30px rgba(0,0,0,0.1)',
+            btn: '0 5px 15px rgba(255, 107, 53, 0.4)'
+          },
+          backgroundImage: {
+            'grad-primary': 'linear-gradient(135deg, #ff6b35, #e55a2b)',
+            'btn-grad': 'linear-gradient(45deg, #ff6b35, #e55a2b)'
+          }
+        }
+      }
+    }
+  </script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-
-  <style>
-    :root {
-      --primary-color: #ff6b35;
-      --secondary-color: #2c3e50;
-      --accent-color: #3498db;
-      --success-color: #27ae60;
-      --warning-color: #f39c12;
-      --light-gray: #f8f9fa;
-      --dark-gray: #6c757d;
-      --border-color: #e9ecef;
-    }
-
-    body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background-color: #f8f9fa;
-    }
-
-    .navbar {
-      background: linear-gradient(135deg, var(--primary-color), #e55a2b) !important;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-    }
-
-    .navbar-brand {
-      font-weight: bold;
-      font-size: 24px;
-      color: white !important;
-    }
-
-    .nav-link {
-      color: white !important;
-      font-weight: 500;
-      transition: color 0.3s;
-    }
-
-    .nav-link:hover {
-      color: #f8f9fa !important;
-    }
-
-    .hero-section {
-      background: linear-gradient(135deg, var(--primary-color), #e55a2b);
-      color: white;
-      padding: 60px 0;
-      text-align: center;
-    }
-
-    .hero-title {
-      font-size: 3rem;
-      font-weight: bold;
-      margin-bottom: 20px;
-    }
-
-    .hero-subtitle {
-      font-size: 1.2rem;
-      margin-bottom: 40px;
-      opacity: 0.9;
-    }
-
-    .search-container {
-      background: white;
-      padding: 40px;
-      border-radius: 15px;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-      margin-top: -30px;
-      position: relative;
-      z-index: 10;
-    }
-
-    .search-input {
-      border: 3px solid var(--border-color);
-      border-radius: 50px;
-      padding: 15px 25px;
-      font-size: 18px;
-      transition: all 0.3s;
-      width: 100%;
-    }
-
-    .search-input:focus {
-      border-color: var(--primary-color);
-      box-shadow: 0 0 0 0.2rem rgba(255, 107, 53, 0.25);
-      outline: none;
-    }
-
-    .search-btn {
-      background: linear-gradient(45deg, var(--primary-color), #e55a2b);
-      border: none;
-      border-radius: 50px;
-      padding: 15px 40px;
-      font-size: 18px;
-      font-weight: bold;
-      color: white;
-      transition: all 0.3s;
-      margin-top: 20px;
-    }
-
-    .search-btn:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 5px 15px rgba(255, 107, 53, 0.4);
-    }
-
-    .features-section {
-      padding: 80px 0;
-      background: white;
-    }
-
-    .feature-card {
-      text-align: center;
-      padding: 30px;
-      border-radius: 15px;
-      transition: transform 0.3s;
-      background: white;
-      box-shadow: 0 5px 15px rgba(0,0,0,0.08);
-    }
-
-    .feature-card:hover {
-      transform: translateY(-5px);
-    }
-
-    .feature-icon {
-      font-size: 3rem;
-      color: var(--primary-color);
-      margin-bottom: 20px;
-    }
-
-    .alert {
-      border-radius: 10px;
-      border: none;
-      padding: 20px;
-      margin: 20px 0;
-    }
-
-    .alert-success {
-      background: linear-gradient(45deg, #d4edda, #c3e6cb);
-      color: #155724;
-    }
-
-    .alert-danger {
-      background: linear-gradient(45deg, #f8d7da, #f5c6cb);
-      color: #721c24;
-    }
-
-    .supported-sites {
-      background: var(--light-gray);
-      padding: 40px 0;
-      text-align: center;
-    }
-
-    .site-badge {
-      display: inline-block;
-      background: white;
-      padding: 10px 20px;
-      margin: 5px;
-      border-radius: 25px;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-      font-weight: 500;
-      color: var(--secondary-color);
-    }
-
-    /* Product Display Styles */
-    .product-result {
-      background: white;
-      border-radius: 15px;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-      margin: 30px 0;
-      overflow: hidden;
-    }
-
-    .product-header {
-      background: linear-gradient(135deg, var(--success-color), #229954);
-      color: white;
-      padding: 20px;
-      text-align: center;
-    }
-
-    .product-header h3 {
-      margin: 0;
-      font-size: 1.5rem;
-    }
-
-    .product-content {
-      padding: 30px;
-    }
-
-    .product-image-container {
-      text-align: center;
-      margin-bottom: 30px;
-    }
-
-    .product-image {
-      max-width: 100%;
-      max-height: 400px;
-      border-radius: 10px;
-      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-    }
-
-    .image-placeholder {
-      width: 300px;
-      height: 300px;
-      background: var(--light-gray);
-      border-radius: 10px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin: 0 auto;
-      color: var(--dark-gray);
-    }
-
-    .image-placeholder i {
-      font-size: 4rem;
-      opacity: 0.5;
-    }
-
-    .product-details {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 30px;
-    }
-
-    .product-info h2 {
-      color: var(--secondary-color);
-      margin-bottom: 20px;
-      font-size: 1.8rem;
-    }
-
-    .price-section {
-      background: var(--light-gray);
-      padding: 20px;
-      border-radius: 10px;
-      margin: 20px 0;
-    }
-
-    .current-price {
-      font-size: 2.5rem;
-      font-weight: bold;
-      color: var(--primary-color);
-      margin-bottom: 10px;
-    }
-
-    .original-price {
-      font-size: 1.5rem;
-      color: var(--dark-gray);
-      text-decoration: line-through;
-      margin-right: 15px;
-    }
-
-    .discount-badge {
-      background: var(--success-color);
-      color: white;
-      padding: 5px 10px;
-      border-radius: 5px;
-      font-size: 14px;
-      font-weight: bold;
-    }
-
-    .rating-section {
-      display: flex;
-      align-items: center;
-      margin: 20px 0;
-    }
-
-    .rating-stars {
-      color: var(--warning-color);
-      font-size: 24px;
-      margin-right: 10px;
-    }
-
-    .rating-text {
-      color: var(--dark-gray);
-      font-size: 16px;
-    }
-
-    .detail-item {
-      display: flex;
-      justify-content: space-between;
-      padding: 10px 0;
-      border-bottom: 1px solid var(--border-color);
-    }
-
-    .detail-item:last-child {
-      border-bottom: none;
-    }
-
-    .detail-label {
-      font-weight: 600;
-      color: var(--secondary-color);
-    }
-
-    .detail-value {
-      color: var(--dark-gray);
-    }
-
-    .action-buttons {
-      margin-top: 30px;
-      text-align: center;
-    }
-
-    .btn-primary {
-      background: linear-gradient(45deg, var(--primary-color), #e55a2b);
-      border: none;
-      border-radius: 25px;
-      padding: 15px 30px;
-      font-weight: 600;
-      transition: all 0.3s;
-      margin: 0 10px;
-    }
-
-    .btn-primary:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 5px 15px rgba(255, 107, 53, 0.4);
-    }
-
-    .btn-secondary {
-      background: var(--light-gray);
-      border: 2px solid var(--border-color);
-      border-radius: 25px;
-      padding: 15px 30px;
-      font-weight: 600;
-      color: var(--dark-gray);
-      transition: all 0.3s;
-      margin: 0 10px;
-    }
-
-    .btn-secondary:hover {
-      background: var(--border-color);
-      color: var(--secondary-color);
-    }
-
-    @media (max-width: 768px) {
-      .product-details {
-        grid-template-columns: 1fr;
-        gap: 20px;
-      }
-      
-      .current-price {
-        font-size: 2rem;
-      }
-    }
-  </style>
-
 </head>
 
-<body{% if success and clear_form %} data-clear-form="true"{% endif %}>
+<body{% if success and clear_form %} data-clear-form="true"{% endif %} class="bg-light font-[Segoe_UI,Tahoma,Geneva,Verdana,sans-serif]">
   <!-- Navigation -->
-  <nav class="navbar navbar-expand-lg navbar-dark static-top">
-    <div class="container">
-      <a class="navbar-brand" href="{% url 'index' %}">
+  <nav class="bg-grad-primary shadow-md">
+    <div class="max-w-6xl mx-auto px-6 py-3 flex items-center justify-between">
+      <a class="text-white font-bold text-2xl" href="{% url 'index' %}">
         <i class="fas fa-search-dollar"></i> Product Scraper
       </a>
-      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive">
-        <span class="navbar-toggler-icon"></span>
+      <button id="navToggle" class="md:hidden text-white" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="fas fa-bars"></span>
       </button>
-      <div class="collapse navbar-collapse" id="navbarResponsive">
-        <ul class="navbar-nav ml-auto">
-          <li class="nav-item active">
-            <a class="nav-link" href="{% url 'index' %}">
+      <div id="navbarResponsive" class="hidden md:block w-full md:w-auto md:ml-auto">
+        <ul class="md:flex md:items-center md:space-x-6 text-right md:text-left">
+          <li class="my-2 md:my-0">
+            <a class="text-white font-medium hover:text-white/90" href="{% url 'index' %}">
               <i class="fas fa-home"></i> Home
             </a>
           </li>
-          <li class="nav-item">
-            <a class="nav-link" href="{% url 'images' %}">
+          <li class="my-2 md:my-0">
+            <a class="text-white font-medium hover:text-white/90" href="{% url 'images' %}">
               <i class="fas fa-shopping-bag"></i> My Products
             </a>
           </li>
           {% if user.is_authenticated %}
-          <li class="nav-item">
-            <a class="nav-link" href="{% url 'logout' %}">
+          <li class="my-2 md:my-0">
+            <a class="text-white font-medium hover:text-white/90" href="{% url 'logout' %}">
               <i class="fas fa-sign-out-alt"></i> Logout
             </a>
           </li>
           {% else %}
-          <li class="nav-item">
-            <a class="nav-link" href="{% url 'login' %}">
+          <li class="my-2 md:my-0">
+            <a class="text-white font-medium hover:text-white/90" href="{% url 'login' %}">
               <i class="fas fa-sign-in-alt"></i> Login
             </a>
           </li>
-          <li class="nav-item">
-            <a class="nav-link" href="{% url 'register' %}">
+          <li class="my-2 md:my-0">
+            <a class="text-white font-medium hover:text-white/90" href="{% url 'register' %}">
               <i class="fas fa-user-plus"></i> Signup
             </a>
           </li>
@@ -404,42 +89,43 @@
   </nav>
 
   <!-- Hero Section -->
-  <div class="hero-section">
-    <div class="container">
-      <h1 class="hero-title">Welcome, {{user.username}}</h1>
-      <p class="hero-subtitle">Find the best deals and compare prices across multiple retailers</p>
+  <div class="bg-grad-primary text-white py-12 text-center">
+    <div class="max-w-6xl mx-auto px-6">
+      <h1 class="text-4xl font-bold mb-3">Welcome, {{user.username}}</h1>
+      <p class="text-lg opacity-90">Find the best deals and compare prices across multiple retailers</p>
     </div>
   </div>
 
   <!-- Search Container -->
-  <div class="container">
-    <div class="row justify-content-center">
-      <div class="col-lg-8">
-        <div class="search-container">
+  <div class="px-4">
+    <div class="flex justify-center">
+      <div class="w-full max-w-3xl -mt-8 relative z-10 mx-auto">
+        <div class="bg-white p-10 rounded-2xl shadow-card">
           <form method="POST" action="{% url 'index' %}">
             {% csrf_token %}
-            <div class="text-center mb-4">
-              <h3 class="mb-3">Scrape Product Details</h3>
-              <p class="text-muted">Use these demo sites for easy scraping:
+            <div class="text-center mb-6">
+              <h3 class="text-2xl font-bold mb-2">Scrape Product Details</h3>
+              <p class="text-dark">
+                Use these demo sites for easy scraping:
                 <br>
-                <a href="https://books.toscrape.com" target="_blank">books.toscrape.com</a> ·
-                <a href="https://scrapeme.live/shop/" target="_blank">scrapeme.live/shop/</a>
+                <a class="text-white underline decoration-white/60" href="https://books.toscrape.com" target="_blank">books.toscrape.com</a> ·
+                <a class="text-white underline decoration-white/60" href="https://scrapeme.live/shop/" target="_blank">scrapeme.live/shop/</a>
               </p>
-              <p class="text-muted" style="margin-top:8px;">
+              <p class="text-dark mt-2">
                 For real stores like Amazon or Flipkart, check the README on GitHub for guidance.
               </p>
             </div>
-            
-            <div class="form-group">
-              <input type="url" class="form-control search-input" id="product_url" 
+
+            <div class="mb-4">
+              <input type="url" class="w-full border-2 border-borderc rounded-full py-4 px-6 text-lg focus:outline-none focus:ring-2 focus:ring-primary/30" id="product_url" 
                      placeholder="Paste product URL here (Amazon, Flipkart, eBay, etc.)" 
                      name="product_url" required
                      {% if clear_form %}value=""{% endif %}>
               <input type="hidden" id="user" value="{{user.username}}" name="user">
             </div>
-            
+
             <div class="text-center">
-              <button type="submit" class="btn search-btn">
+              <button type="submit" class="bg-btn-grad text-white rounded-full py-4 px-10 text-lg font-bold transition-transform hover:-translate-y-0.5 hover:shadow-[0_5px_15px_rgba(255,107,53,0.4)]">
                 <i class="fas fa-search"></i> Scrape Product
               </button>
             </div>
@@ -450,16 +136,16 @@
   </div>
 
   <!-- Messages -->
-  <div class="container">
-    <div class="row justify-content-center">
-      <div class="col-lg-8">
+  <div class="px-4">
+    <div class="flex justify-center">
+      <div class="w-full max-w-3xl mt-6 mx-auto">
         {% for message in messages %}
           {% if message.tags == 'error' %}
-            <div class="alert alert-danger">
+            <div class="rounded-lg border border-red-200 bg-red-50 text-red-800 px-4 py-4 mb-4">
               <i class="fas fa-exclamation-triangle"></i> {{message}}
             </div>
           {% else %}
-            <div class="alert alert-success">
+            <div class="rounded-lg border border-green-200 bg-green-50 text-green-800 px-4 py-4 mb-4">
               <i class="fas fa-check-circle"></i> {{message}}
             </div>
           {% endif %}
@@ -470,19 +156,19 @@
 
   <!-- Success-only display after scraping -->
   {% if success and product_id %}
-  <div class="container">
-    <div class="row justify-content-center">
-      <div class="col-lg-8">
-        <div class="product-result">
-          <div class="product-header">
-            <h3><i class="fas fa-check-circle"></i> Product Scraped Successfully!</h3>
+  <div class="px-4">
+    <div class="flex justify-center">
+      <div class="w-full max-w-3xl mx-auto">
+        <div class="bg-white rounded-2xl shadow-card my-8 overflow-hidden">
+          <div class="bg-successc text-white p-5 text-center">
+            <h3 class="text-xl font-semibold"><i class="fas fa-check-circle"></i> Product Scraped Successfully!</h3>
           </div>
-          <div class="product-content text-center">
-            <p class="text-muted mb-4">You can view the full details on the product page.</p>
-            <a href="{% url 'product_detail' product_id %}" class="btn btn-primary">
+          <div class="p-8 text-center">
+            <p class="text-dark mb-4">You can view the full details on the product page.</p>
+            <a href="{% url 'product_detail' product_id %}" class="inline-block bg-btn-grad text-white rounded-full py-3 px-6 font-semibold mr-3 hover:shadow-[0_5px_15px_rgba(255,107,53,0.4)] transition-shadow">
               <i class="fas fa-info-circle"></i> Go to Product Details
             </a>
-            <a href="{% url 'images' %}" class="btn btn-secondary">
+            <a href="{% url 'images' %}" class="inline-block bg-gray-100 border border-borderc text-gray-700 rounded-full py-3 px-6 font-semibold hover:bg-borderc transition-colors">
               <i class="fas fa-shopping-bag"></i> View My Products
             </a>
           </div>
@@ -493,66 +179,63 @@
   {% endif %}
 
   <!-- Features Section -->
-  <div class="features-section">
-    <div class="container">
-      <div class="row text-center mb-5">
-        <div class="col-12">
-          <h2>Why Choose Our Product Scraper?</h2>
-          <p class="text-muted">Get comprehensive product information from multiple sources</p>
-        </div>
+  <div class="py-16 bg-white">
+    <div class="max-w-6xl mx-auto px-6">
+      <div class="text-center mb-10">
+        <h2 class="text-3xl font-bold text-secondary">Why Choose Our Product Scraper?</h2>
+        <p class="text-dark">Get comprehensive product information from multiple sources</p>
       </div>
-      
-      <div class="row">
-        <div class="col-md-4 mb-4">
-          <div class="feature-card">
-            <div class="feature-icon">
-              <i class="fas fa-chart-line"></i>
-            </div>
-            <h4>Price Comparison</h4>
-            <p>Compare prices across multiple retailers to find the best deals</p>
-          </div>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 justify-items-center">
+        <div class="text-center p-8 rounded-2xl bg-white shadow-[0_5px_15px_rgba(0,0,0,0.08)] max-w-sm w-full">
+          <div class="text-primary text-5xl mb-4"><i class="fas fa-chart-line"></i></div>
+          <h4 class="text-xl font-semibold">Price Comparison</h4>
+          <p>Compare prices across multiple retailers to find the best deals</p>
         </div>
-        
-        <div class="col-md-4 mb-4">
-          <div class="feature-card">
-            <div class="feature-icon">
-              <i class="fas fa-star"></i>
-            </div>
-            <h4>Reviews & Ratings</h4>
-            <p>Get aggregated reviews and ratings from various sources</p>
-          </div>
+        <div class="text-center p-8 rounded-2xl bg-white shadow-[0_5px_15px_rgba(0,0,0,0.08)] max-w-sm w-full">
+          <div class="text-primary text-5xl mb-4"><i class="fas fa-star"></i></div>
+          <h4 class="text-xl font-semibold">Reviews & Ratings</h4>
+          <p>Get aggregated reviews and ratings from various sources</p>
         </div>
-        
-        <div class="col-md-4 mb-4">
-          <div class="feature-card">
-            <div class="feature-icon">
-              <i class="fas fa-bell"></i>
-            </div>
-            <h4>Price Alerts</h4>
-            <p>Set up alerts for price drops and never miss a good deal</p>
-          </div>
+        <div class="text-center p-8 rounded-2xl bg-white shadow-[0_5px_15px_rgba(0,0,0,0.08)] max-w-sm w-full">
+          <div class="text-primary text-5xl mb-4"><i class="fas fa-bell"></i></div>
+          <h4 class="text-xl font-semibold">Price Alerts</h4>
+          <p>Set up alerts for price drops and never miss a good deal</p>
         </div>
       </div>
     </div>
   </div>
 
   <!-- Supported Sites (Demo notes only) -->
-  <div class="supported-sites">
-    <div class="container">
-      <h4 class="text-center mb-4">Recommended Demo Websites</h4>
-      <div class="text-center">
-        <a class="site-badge" href="https://books.toscrape.com" target="_blank">books.toscrape.com</a>
-        <a class="site-badge" href="https://scrapeme.live/shop/" target="_blank">scrapeme.live/shop/</a>
+  <div class="bg-light py-10 text-center">
+    <div class="max-w-6xl mx-auto px-6">
+      <h4 class="text-xl font-semibold mb-5">Recommended Demo Websites</h4>
+      <div class="space-x-3">
+        <a class="inline-block bg-white py-2 px-5 rounded-full shadow-md text-secondary" href="https://books.toscrape.com" target="_blank">books.toscrape.com</a>
+        <a class="inline-block bg-white py-2 px-5 rounded-full shadow-md text-secondary" href="https://scrapeme.live/shop/" target="_blank">scrapeme.live/shop/</a>
       </div>
-      <p class="text-muted mt-3">Need Amazon/Flipkart scraping? Refer to the GitHub docs for setup and limitations.</p>
+      <p class="text-dark mt-3">Need Amazon/Flipkart scraping? Refer to the GitHub docs for setup and limitations.</p>
     </div>
   </div>
 
-  <!-- Bootstrap core JavaScript -->
-  <script src="{% static 'vendor/jquery/jquery.slim.min.js' %}"></script>
-  <script src="{% static 'vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
-
   <script>
+    // Navbar toggle
+    document.addEventListener('DOMContentLoaded', function () {
+      const toggle = document.getElementById('navToggle');
+      const menu = document.getElementById('navbarResponsive');
+      if (toggle && menu) {
+        toggle.addEventListener('click', function () {
+          const isHidden = menu.classList.contains('hidden');
+          if (isHidden) {
+            menu.classList.remove('hidden');
+            toggle.setAttribute('aria-expanded', 'true');
+          } else {
+            menu.classList.add('hidden');
+            toggle.setAttribute('aria-expanded', 'false');
+          }
+        });
+      }
+    });
+
     // Image loading fallback
     document.addEventListener('DOMContentLoaded', function() {
       const images = document.querySelectorAll('.product-image');
@@ -565,7 +248,6 @@
           }
         });
       });
-      
       // Clear form after successful scraping
       const shouldClearForm = document.body.getAttribute('data-clear-form') === 'true';
       if (shouldClearForm) {

@@ -1,0 +1,149 @@
+<!-- base.html -->
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}Product Scraper{% endblock %}</title>
+  
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          animation: {
+            'fade-in': 'fadeIn 0.5s ease-out',
+            'slide-up': 'slideUp 0.5s ease-out',
+          },
+          keyframes: {
+            fadeIn: {
+              '0%': { opacity: '0' },
+              '100%': { opacity: '1' },
+            },
+            slideUp: {
+              '0%': { transform: 'translateY(10px)', opacity: '0' },
+              '100%': { transform: 'translateY(0)', opacity: '1' },
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+    }
+    .gradient-bg {
+      background: linear-gradient(135deg, #ff7e5f 0%, #feb47b 100%);
+    }
+    .btn-gradient {
+      background: linear-gradient(135deg, #ff7e5f 0%, #feb47b 100%);
+      transition: all 0.3s ease;
+    }
+    .btn-gradient:hover {
+      background: linear-gradient(135deg, #feb47b 0%, #ff7e5f 100%);
+      transform: translateY(-2px);
+      box-shadow: 0 10px 25px -5px rgba(254, 180, 123, 0.4);
+    }
+    .card-hover {
+      transition: all 0.3s ease;
+    }
+    .card-hover:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    }
+    .line-clamp-2 {
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+  </style>
+</head>
+
+<body class="bg-gray-50 font-sans">
+
+  <!-- Navbar -->
+  <nav class="gradient-bg shadow-lg">
+    <div class="container mx-auto px-4 py-3 flex flex-col md:flex-row items-center justify-between">
+      <a class="text-white font-bold text-2xl flex items-center mb-2 md:mb-0 animate-fade-in" href="{% url 'index' %}">
+        <i class="fas fa-search-dollar mr-2"></i> Product Scraper
+      </a>
+      <ul class="flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-6">
+        <li>
+          <a href="{% url 'index' %}" class="text-white font-medium hover:text-gray-100 flex items-center transition-colors duration-200">
+            <i class="fas fa-home mr-2"></i> Home
+          </a>
+        </li>
+        <li>
+          <a href="{% url 'images' %}" class="text-white font-medium hover:text-gray-100 flex items-center transition-colors duration-200">
+            <i class="fas fa-shopping-bag mr-2"></i> My Products
+          </a>
+        </li>
+        {% if user.is_authenticated %}
+        <li>
+          <a href="{% url 'logout' %}" class="text-white font-medium hover:text-gray-100 flex items-center transition-colors duration-200">
+            <i class="fas fa-sign-out-alt mr-2"></i> Logout
+          </a>
+        </li>
+        {% else %}
+        <li>
+          <a href="{% url 'login' %}" class="text-white font-medium hover:text-gray-100 flex items-center transition-colors duration-200">
+            <i class="fas fa-sign-in-alt mr-2"></i> Login
+          </a>
+        </li>
+        <li>
+          <a href="{% url 'register' %}" class="text-white font-medium hover:text-gray-100 flex items-center transition-colors duration-200">
+            <i class="fas fa-user-plus mr-2"></i> Signup
+          </a>
+        </li>
+        {% endif %}
+      </ul>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <main class="container mx-auto px-4 py-8">
+    {% block content %}
+    {% endblock %}
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-gray-800 text-gray-200 py-8 mt-12">
+    <div class="container mx-auto px-4 text-center">
+      <p>&copy; {{ year }} Product Scraper. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <!-- JS -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const images = document.querySelectorAll('.product-image');
+      images.forEach(img => {
+        img.addEventListener('error', function() {
+          this.style.display = 'none';
+          const placeholder = this.nextElementSibling;
+          if (placeholder) {
+            placeholder.style.display = 'flex';
+          }
+        });
+      });
+
+      const shouldClearForm = document.body.getAttribute('data-clear-form') === 'true';
+      if (shouldClearForm) {
+        const productUrlInput = document.getElementById('product_url');
+        if (productUrlInput) {
+          productUrlInput.value = '';
+          productUrlInput.placeholder = 'Paste another product URL here...';
+        }
+      }
+    });
+  </script>
+
+</body>
+</html>
